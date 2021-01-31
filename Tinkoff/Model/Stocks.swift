@@ -8,8 +8,8 @@
 import Foundation
 
 struct Stocks {
-	var lastRequestedStock: (StockData, URL)?
-	var favorites = [(StockData, URL)]()
+	private(set) var lastRequestedStock: (StockData, URL)?
+	private(set) var favorites = [(StockData, URL)]()
 	
 	mutating func addCurrentStockToFavourite() {
 		if !favorites.contains(where: { lastRequestedStock!.0.symbol == $0.0.symbol }) {
@@ -19,5 +19,11 @@ struct Stocks {
 	
 	mutating func setLastRequestedStock(_ stock: StockData, with link: URL) {
 		lastRequestedStock = (stock, link)
+	}
+	
+	mutating func updateFavourite(with stock: StockData) {
+		if let i = favorites.firstIndex(where: { $0.0.symbol == stock.symbol }) {
+			favorites[i].0 = stock
+		}
 	}
 }

@@ -9,13 +9,15 @@ import SwiftUI
 
 struct SearchView: View {
 	@EnvironmentObject var stocks: StocksWorker
+	@Environment(\.colorScheme) private var colorScheme
 	@State private var companySymbol = ""
 	@State private var moveToNextScreen = false
 	@State private var displayAlert = false
+	@State private var displayProgress = false
 	
     var body: some View {
 		VStack(spacing: .zero) {
-			Image("files")
+			Image(colorScheme == .dark ? "files" : "filesWhite")
 				.padding(.bottom, 40)
 			
 			textBlockView
@@ -25,7 +27,9 @@ struct SearchView: View {
 				.padding(.bottom, 13)
 			
 			Button(action: {
-				stocks.get(for: companySymbol) { res in
+				displayProgress = true
+				
+				stocks.getStock(for: companySymbol) { res in
 					switch res {
 					case .success:
 						moveToNextScreen.toggle()
@@ -36,6 +40,7 @@ struct SearchView: View {
 						}
 						print(err)
 					}
+					displayProgress = false
 				}
 			}){ buttonView }
 		}
@@ -78,8 +83,14 @@ struct SearchView: View {
 		ZStack {
 			RoundedRectangle(cornerRadius: 10)
 				.foregroundColor(Color("darkGray"))
-			HStack {
-				Image(systemName: "magnifyingglass")
+			HStack(spacing: 5) {
+				if displayProgress {
+					ProgressView()
+						.frame(width: 22, height: 22)
+				} else {
+					Image(systemName: "magnifyingglass")
+						.frame(width: 22, height: 22)
+				}
 				TextField(searchPlaceholder, text: $companySymbol)
 					
 			}.padding(.leading, 10)
