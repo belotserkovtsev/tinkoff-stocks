@@ -63,14 +63,14 @@ struct FavouritesView: View {
 					.aspectRatio(contentMode: .fit)
 					.frame(width: 10, height: 10)
 					.padding(.trailing, 4)
-				Text("\(String(format: "%.2f", stock.change)) %")
+				Text("\(String(format: "%.2f", stock.change / stock.latestPrice * 100)) %")
 					.foregroundColor(Color("darkGray2"))
 					.font(.system(size: 14, weight: .medium))
 			}
 			.padding([.leading, .trailing], 16)
 			
 		}
-		.frame(width: 354, height: 64)
+		.frame(width: stockCardWidth, height: stockCardHeight)
 		.shadow(color: Color("shadow"), radius: 8, x: 2, y: 2)
 	}
 	
@@ -80,7 +80,7 @@ struct FavouritesView: View {
 			stocks.updateFavourites { res in
 				switch res {
 				case .success:
-					print("success")
+					break
 				case .failure(let err):
 					if alertToDisplay == nil && !displayAlert {
 						alertToDisplay = makeExceptionAlert(with: err.message)
@@ -101,6 +101,11 @@ struct FavouritesView: View {
 			
 		})
 	}
+	//MARK: FavouritesView UI Constants
+	
+	private let stockCardWidth: CGFloat = 354
+	private let stockCardHeight: CGFloat = 64
+	
 	
 }
 

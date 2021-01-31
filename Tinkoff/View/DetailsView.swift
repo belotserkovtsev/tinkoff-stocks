@@ -77,7 +77,7 @@ struct DetailsView: View {
 						.aspectRatio(contentMode: .fit)
 						.frame(width: 16, height: 16)
 					
-					Text("\(String(format: "%.2f", data.change)) %")
+					Text("\(String(format: "%.2f", data.change / data.latestPrice * 100)) %")
 						.foregroundColor(Color("darkGray2"))
 						.font(.system(size: 16, weight: .medium))
 					Text(sinceWhen)
